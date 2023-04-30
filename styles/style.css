@@ -153,7 +153,7 @@ p {
 	background: blue;
 	font-weight: bold;
 	border: 2px solid white;
-	text-shadow: -1px 2px 3px cyan;
+	text-shadow: -1px 3px 4px cyan;
 	box-shadow: -2px 3px 4px cyan;
 	color: white;
 	-webkit-transition: background-color .3s, text-shadow .3s, box-shadow .3s, color .3s;
@@ -165,7 +165,7 @@ p {
 	background: blue;
 	font-weight: bold;
 	border: 2px solid white;
-	text-shadow: -1px 2px 3px cyan;
+	text-shadow: -1px 3px 4px cyan;
 	box-shadow: -2px 3px 4px cyan;
 	color: white;
 	-webkit-transition: background-color.3s, text-shadow .3s, box-shadow .3s, color .3s;
