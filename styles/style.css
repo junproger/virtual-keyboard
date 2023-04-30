@@ -70,7 +70,7 @@ p {
 	font-size: 25px;
 	padding: 5px 0 0 10px;
 	border-radius: 15px;
-	background: #ddd;
+	background-color: #ddd;
 	resize: none;
 }
 .inform {
@@ -94,7 +94,7 @@ p {
 	justify-content: center;
 	border-radius: 15px;
 	border: 2px solid black;
-	background: #999;
+	background-color: #999;
 	gap: 7.5px;
 }
 /* KEYS STYLE OF KEYBOARD */
@@ -117,30 +117,30 @@ p {
 .keysize_1x {
 	width: 55px;
 	height: 55px;
-	background: #444;
+	background-color: #444;
 }
 .keysize_2 {
 	width: 80px;
 	height: 55px;
-	background: #444;
+	background-color: #444;
 }
 .keysize_3 {
 	width: 115px;
 	height: 55px;
-	background: #444;
+	background-color: #444;
 }
 .keysize_4 {
 	width: 380px;
 	height: 55px;
 }
 .keyscolor {
-	background: #444;
+	background-color: #444;
 }
 /* ANIMATION OF ACTIVITY */
 .vkbkeys:focus,
 .vkbkeys:hover {
 	cursor: pointer;
-	background: indigo;
+	background-color: indigo;
 	font-weight: bold;
 	border: 2px solid white;
 	color: white;
@@ -150,7 +150,7 @@ p {
 }
 .vkbkeys:active {
 	cursor: pointer;
-	background: blue;
+	background-color: blue;
 	font-weight: bold;
 	border: 2px solid white;
 	text-shadow: -1px 3px 4px cyan;
@@ -162,7 +162,7 @@ p {
 }
 .keyactive {
 	cursor: pointer;
-	background: blue;
+	background-color: blue;
 	font-weight: bold;
 	border: 2px solid white;
 	text-shadow: -1px 3px 4px cyan;
