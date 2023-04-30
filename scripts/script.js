@@ -1,5 +1,4 @@
 /** VKB SCRIPT */
-
 // VKB KEYS DATA
 const VKB_DATA = {
   ENG_DATA: {
@@ -764,7 +763,7 @@ class VirtualKeyboard {
     } else {
       return;
     }
-    // mouse caps down
+    // mouse caps click
     if (event.target.id === 'CapsLock') {
       if (this.key_caps === false) {
         this.key_caps = true;
@@ -773,7 +772,7 @@ class VirtualKeyboard {
       }
       this.createKeysLayout();
     }
-    // mouse shift down
+    // mouse shift click
     if ((event.target.id === 'ShiftLeft') || (event.target.id === 'ShiftRight')) {
       if (this.key_shift === false) {
         this.key_shift = true;
@@ -784,7 +783,6 @@ class VirtualKeyboard {
     }
     // special named keys
     switch (event.target.id) {
-      // can be use textContent
       case 'Backspace':
         this.editSelectedKeys('backsp');
         break;
