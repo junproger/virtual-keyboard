@@ -604,3 +604,151 @@ const KEYS_CODES = [
   'ArrowRight',
   'ControlRight',
 ];
+
+class VirtualKeyboard {
+  constructor(lang = 'ENG_DATA') {
+    this.key_caps = false;
+    this.key_shift = false;
+    this.key_lang = lang;
+    if (localStorage.getItem('junpr#8574VkbLang')) {
+      this.key_lang = localStorage.getItem('junpr#8574VkbLang');
+    } else {
+      this.key_lang = 'ENG_DATA';
+    }
+  }
+
+  createKeyBoardFrame() {
+    const elementBody = document.body;
+    elementBody.classList.add('body');
+    elementBody.insertAdjacentHTML('afterbegin', '<div class="wrapper"></div>');
+    const elementWrapper = document.querySelector('.wrapper');
+    elementWrapper.insertAdjacentHTML('beforeend', '<textarea class="textarea" id="TXTAREA"></textarea>');
+    this.nodeAREA = document.getElementById('TXTAREA');
+    elementWrapper.insertAdjacentHTML('beforeend', '<p class="inform">Switch language: Left Ctrl + Left Shift. Keyboard designed: for Microsoft Windows 10/11.</p>');
+    elementWrapper.insertAdjacentHTML('beforeend', '<div class="keyboard" id="KEYBRD"></div>');
+    this.elementVKB = document.querySelector('.keyboard');
+    this.createKeysFragments();
+  }
+
+  createKeysFragments() {
+    const keyFragment = document.createDocumentFragment();
+    for (let i = 0; i <= 63; i += 1) {
+      const item = document.createElement('div');
+      item.setAttribute('class', 'vkbkeys');
+      if (i === 13 || i === 29 || i === 41 || i === 42 || i === 54) {
+        item.classList.add('keysize_3');
+      } else if (i === 0 || i === 14 || i === 28 || i === 53) {
+        item.classList.add('keysize_1x');
+      } else if (i === 55 || i === 59) {
+        item.classList.add('keysize_2');
+      } else if (i === 58) {
+        item.classList.add('keysize_4');
+      } else {
+        item.classList.add('keysize_1');
+      }
+      if (i > 54 && i < 58) {
+        item.classList.add('keyscolor');
+      } else if (i > 58 && i < 64) {
+        item.classList.add('keyscolor');
+      }
+      item.setAttribute('id', `${KEYS_CODES[i]}`);
+      keyFragment.append(item);
+    }
+    this.elementVKB.append(keyFragment);
+    this.createKeysLayout();
+  }
+
+  createKeysLayout() {
+    const childrenVKB = document.getElementById('KEYBRD').children;
+    function parseKeys(data, part) {
+      if (data === 'ENG_DATA') {
+        for (let j = 0; j <= 63; j += 1) {
+          childrenVKB[j].textContent = VKB_DATA.ENG_DATA[`${part}`][`${KEYS_CODES[j]}`];
+        }
+      } else if (data === 'RUS_DATA') {
+        for (let j = 0; j <= 63; j += 1) {
+          childrenVKB[j].textContent = VKB_DATA.RUS_DATA[`${part}`][`${KEYS_CODES[j]}`];
+        }
+      }
+    }
+    if (this.key_lang === 'ENG_DATA' && (this.key_caps === false && this.key_shift === false)) {
+      parseKeys('ENG_DATA', 'eng_keys');
+    } else if (this.key_lang === 'ENG_DATA' && (this.key_caps === true && this.key_shift === true)) {
+      parseKeys('ENG_DATA', 'eng_caps_shift');
+    } else if (this.key_lang === 'RUS_DATA' && (this.key_caps === false && this.key_shift === false)) {
+      parseKeys('RUS_DATA', 'rus_keys');
+    } else if (this.key_lang === 'RUS_DATA' && (this.key_caps === true && this.key_shift === true)) {
+      parseKeys('RUS_DATA', 'rus_caps_shift');
+    } else if (this.key_lang === 'ENG_DATA' && this.key_caps === true) {
+      parseKeys('ENG_DATA', 'eng_caps');
+    } else if (this.key_lang === 'RUS_DATA' && this.key_caps === true) {
+      parseKeys('RUS_DATA', 'rus_caps');
+    } else if (this.key_lang === 'ENG_DATA' && this.key_shift === true) {
+      parseKeys('ENG_DATA', 'eng_shift');
+    } else if (this.key_lang === 'RUS_DATA' && this.key_shift === true) {
+      parseKeys('RUS_DATA', 'rus_shift');
+    }
+  }
+
+  printCurrentKey(code) {
+    if (this.key_lang === 'eng_keys' && (this.key_caps === false && this.key_shift === false)) {
+      this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_keys[`${code}`];
+    } else if (this.key_lang === 'eng_keys' && (this.key_caps === true && this.key_shift === true)) {
+      this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_caps_shift[`${code}`];
+    } else if (this.key_lang === 'rus_keys' && (this.key_caps === false && this.key_shift === false)) {
+      this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_keys[`${code}`];
+    } else if (this.key_lang === 'rus_keys' && (this.key_caps === true && this.key_shift === true)) {
+      this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_caps_shift[`${code}`];
+    } else if (this.key_lang === 'eng_keys' && this.key_caps === true) {
+      this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_caps[`${code}`];
+    } else if (this.key_lang === 'rus_keys' && this.key_caps === true) {
+      this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_caps[`${code}`];
+    } else if (this.key_lang === 'eng_keys' && this.key_shift === true) {
+      this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_shift[`${code}`];
+    } else if (this.key_lang === 'rus_keys' && this.key_shift === true) {
+      this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_shift[`${code}`];
+    }
+  }
+
+  editSelectedKeys(exec) {
+    const areaContent = this.nodeAREA.value;
+    const finishIndex = this.nodeAREA.selectionEnd;
+    const startIndex = this.nodeAREA.selectionStart;
+    const valueLength = this.nodeAREA.value.length;
+    const intervalLength = finishIndex - startIndex;
+    if ((startIndex === finishIndex) && (intervalLength === 0)) {
+      if ((exec === 'delete') && (finishIndex !== valueLength)) {
+        this.nodeAREA.value = areaContent.slice(0, startIndex)
+          + areaContent.slice(finishIndex + 1, valueLength);
+        this.nodeAREA.selectionStart = finishIndex;
+        this.nodeAREA.selectionEnd = startIndex;
+        this.nodeAREA.focus();
+      } else if ((exec === 'backsp') && (startIndex !== 0)) {
+        this.nodeAREA.value = areaContent.slice(0, startIndex - 1)
+          + areaContent.slice(finishIndex, valueLength);
+        this.nodeAREA.selectionStart = finishIndex - 1;
+        this.nodeAREA.selectionEnd = startIndex - 1;
+        this.nodeAREA.focus();
+      } else {
+        this.nodeAREA.focus();
+        return;
+      }
+    }
+    if ((startIndex !== finishIndex) && (intervalLength !== 0)) {
+      if ((exec === 'delete') || (exec === 'backsp')) {
+        this.nodeAREA.value = areaContent.slice(0, startIndex)
+          + areaContent.slice(finishIndex, valueLength);
+        this.nodeAREA.selectionStart = finishIndex - intervalLength;
+        this.nodeAREA.selectionEnd = startIndex;
+        this.nodeAREA.focus();
+      } else {
+        this.nodeAREA.focus();
+      }
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const VKB = new VirtualKeyboard('ENG_DATA');
+  VKB.createKeyBoardFrame();
+});
