@@ -608,7 +608,9 @@ const KEYS_CODES = [
 class VirtualKeyboard {
   constructor(lang = 'ENG_DATA') {
     this.key_caps = false;
+    this.caps_light = false;
     this.key_shift = false;
+    this.shift_light = false;
     this.key_lang = lang;
     if (localStorage.getItem('junpr#8574VkbLang')) {
       this.key_lang = localStorage.getItem('junpr#8574VkbLang');
@@ -622,7 +624,7 @@ class VirtualKeyboard {
     elementBody.classList.add('body');
     elementBody.insertAdjacentHTML('afterbegin', '<div class="wrapper"></div>');
     const elementWrapper = document.querySelector('.wrapper');
-    elementWrapper.insertAdjacentHTML('beforeend', '<textarea class="textarea" id="TXTAREA"></textarea>');
+    elementWrapper.insertAdjacentHTML('beforeend', '<textarea autofocus class="textarea" id="TXTAREA"></textarea>');
     this.nodeAREA = document.getElementById('TXTAREA');
     elementWrapper.insertAdjacentHTML('beforeend', '<p class="inform">Switch language: Left Ctrl + Left Shift. Keyboard designed: for Microsoft Windows 10/11.</p>');
     elementWrapper.insertAdjacentHTML('beforeend', '<div class="keyboard" id="KEYBRD"></div>');
@@ -691,23 +693,24 @@ class VirtualKeyboard {
   }
 
   printCurrentKey(code) {
-    if (this.key_lang === 'eng_keys' && (this.key_caps === false && this.key_shift === false)) {
+    if (this.key_lang === 'ENG_DATA' && (this.key_caps === false && this.key_shift === false)) {
       this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_keys[`${code}`];
-    } else if (this.key_lang === 'eng_keys' && (this.key_caps === true && this.key_shift === true)) {
+    } else if (this.key_lang === 'ENG_DATA' && (this.key_caps === true && this.key_shift === true)) {
       this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_caps_shift[`${code}`];
-    } else if (this.key_lang === 'rus_keys' && (this.key_caps === false && this.key_shift === false)) {
+    } else if (this.key_lang === 'RUS_DATA' && (this.key_caps === false && this.key_shift === false)) {
       this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_keys[`${code}`];
-    } else if (this.key_lang === 'rus_keys' && (this.key_caps === true && this.key_shift === true)) {
+    } else if (this.key_lang === 'RUS_DATA' && (this.key_caps === true && this.key_shift === true)) {
       this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_caps_shift[`${code}`];
-    } else if (this.key_lang === 'eng_keys' && this.key_caps === true) {
+    } else if (this.key_lang === 'ENG_DATA' && this.key_caps === true) {
       this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_caps[`${code}`];
-    } else if (this.key_lang === 'rus_keys' && this.key_caps === true) {
+    } else if (this.key_lang === 'RUS_DATA' && this.key_caps === true) {
       this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_caps[`${code}`];
-    } else if (this.key_lang === 'eng_keys' && this.key_shift === true) {
+    } else if (this.key_lang === 'ENG_DATA' && this.key_shift === true) {
       this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_shift[`${code}`];
-    } else if (this.key_lang === 'rus_keys' && this.key_shift === true) {
+    } else if (this.key_lang === 'RUS_DATA' && this.key_shift === true) {
       this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_shift[`${code}`];
     }
+    this.nodeAREA.focus();
   }
 
   editSelectedKeys(exec) {
@@ -745,10 +748,85 @@ class VirtualKeyboard {
         this.nodeAREA.focus();
       }
     }
+    this.nodeAREA.focus();
+  }
+
+  addEventsListeners() {
+    document.addEventListener('click', (event) => this.eventMouseClick(event));
+  }
+
+  // MOUSE EVENTS
+  // MOUSE CLICK ON KEYS
+  eventMouseClick(event) {
+    // initial statement, preventDefault
+    if (KEYS_CODES.includes(event.target.id)) {
+      event.preventDefault();
+    } else {
+      return;
+    }
+    // mouse caps down
+    if (event.target.id === 'CapsLock') {
+      if (this.key_caps === false) {
+        this.key_caps = true;
+      } else {
+        this.key_caps = false;
+      }
+      this.createKeysLayout();
+    }
+    // mouse shift down
+    if ((event.target.id === 'ShiftLeft') || (event.target.id === 'ShiftRight')) {
+      if (this.key_shift === false) {
+        this.key_shift = true;
+      } else {
+        this.key_shift = false;
+      }
+      this.createKeysLayout();
+    }
+    // special named keys
+    switch (event.target.id) {
+      // can be use textContent
+      case 'Backspace':
+        this.editSelectedKeys('backsp');
+        break;
+      case 'Tab':
+        this.nodeAREA.value += '    ';
+        break;
+      case 'Delete':
+        this.editSelectedKeys('delete');
+        break;
+      case 'Enter':
+        this.nodeAREA.value += '\n';
+        break;
+      case 'Space':
+        this.nodeAREA.value += ' ';
+        break;
+      case 'CapsLock':
+      case 'ShiftLeft':
+      case 'ShiftRight':
+      case 'ControlLeft':
+      case 'MetaLeft':
+      case 'AltLeft':
+      case 'AltRight':
+      case 'ControlRight':
+        break;
+      default:
+        if (KEYS_CODES.includes(event.target.id) && (this.key_shift === true)) {
+          this.printCurrentKey(event.target.id);
+          this.key_shift = false;
+          this.createKeysLayout();
+        } else if (KEYS_CODES.includes(event.target.id) && (this.key_shift === false)) {
+          this.printCurrentKey(event.target.id);
+        } else {
+          break;
+        }
+        break;
+    }
+    this.nodeAREA.focus();
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const VKB = new VirtualKeyboard('ENG_DATA');
   VKB.createKeyBoardFrame();
+  VKB.addEventsListeners();
 });
