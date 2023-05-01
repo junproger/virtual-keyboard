@@ -751,14 +751,14 @@ class VirtualKeyboard {
   }
 
   addEventsListeners() {
-    document.addEventListener('click', (event) => this.eventMouseClick(event));
+    document.addEventListener('mousedown', (event) => this.eventMouseDown(event));
     document.addEventListener('keydown', (event) => this.eventKeysDown(event));
     document.addEventListener('keyup', (event) => this.eventKeysUp(event));
   }
 
   // MOUSE EVENTS
-  // MOUSE CLICK ON KEYS
-  eventMouseClick(event) {
+  // MOUSE DOWN ON KEYS
+  eventMouseDown(event) {
     // initial statement, preventDefault
     if (KEYS_CODES.includes(event.target.id)) {
       event.preventDefault();
