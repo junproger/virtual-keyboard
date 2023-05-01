@@ -625,7 +625,7 @@ class VirtualKeyboard {
     const elementWrapper = document.querySelector('.wrapper');
     elementWrapper.insertAdjacentHTML('beforeend', '<textarea autofocus class="textarea" id="TXTAREA"></textarea>');
     this.nodeAREA = document.getElementById('TXTAREA');
-    elementWrapper.insertAdjacentHTML('beforeend', '<p class="inform">Switch language: Left Ctrl + Left Shift. Keyboard designed: for Microsoft Windows 10/11.</p>');
+    elementWrapper.insertAdjacentHTML('beforeend', '<p class="inform">Switch language: Left Ctrl + Left Shift. Keyboard designed: Microsoft Windows 10/11.</p>');
     elementWrapper.insertAdjacentHTML('beforeend', '<div class="keyboard" id="KEYBRD"></div>');
     this.elementVKB = document.querySelector('.keyboard');
     this.createKeysFragments();
