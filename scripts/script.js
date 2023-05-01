@@ -692,23 +692,29 @@ class VirtualKeyboard {
   }
 
   printCurrentKey(code) {
+    const finishIndex = this.nodeAREA.selectionEnd;
+    const startIndex = this.nodeAREA.selectionStart;
+    const headPart = this.nodeAREA.value.slice(0, startIndex);
+    const tailPart = this.nodeAREA.value.slice(finishIndex);
     if (this.key_lang === 'ENG_DATA' && (this.key_caps === false && this.key_shift === false)) {
-      this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_keys[`${code}`];
+      this.nodeAREA.value = headPart + VKB_DATA.ENG_DATA.eng_keys[`${code}`] + tailPart;
     } else if (this.key_lang === 'ENG_DATA' && (this.key_caps === true && this.key_shift === true)) {
-      this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_caps_shift[`${code}`];
+      this.nodeAREA.value = headPart + VKB_DATA.ENG_DATA.eng_caps_shift[`${code}`] + tailPart;
     } else if (this.key_lang === 'RUS_DATA' && (this.key_caps === false && this.key_shift === false)) {
-      this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_keys[`${code}`];
+      this.nodeAREA.value = headPart + VKB_DATA.RUS_DATA.rus_keys[`${code}`] + tailPart;
     } else if (this.key_lang === 'RUS_DATA' && (this.key_caps === true && this.key_shift === true)) {
-      this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_caps_shift[`${code}`];
+      this.nodeAREA.value = headPart + VKB_DATA.RUS_DATA.rus_caps_shift[`${code}`] + tailPart;
     } else if (this.key_lang === 'ENG_DATA' && this.key_caps === true) {
-      this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_caps[`${code}`];
+      this.nodeAREA.value = headPart + VKB_DATA.ENG_DATA.eng_caps[`${code}`] + tailPart;
     } else if (this.key_lang === 'RUS_DATA' && this.key_caps === true) {
-      this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_caps[`${code}`];
+      this.nodeAREA.value = headPart + VKB_DATA.RUS_DATA.rus_caps[`${code}`] + tailPart;
     } else if (this.key_lang === 'ENG_DATA' && this.key_shift === true) {
-      this.nodeAREA.value += VKB_DATA.ENG_DATA.eng_shift[`${code}`];
+      this.nodeAREA.value = headPart + VKB_DATA.ENG_DATA.eng_shift[`${code}`] + tailPart;
     } else if (this.key_lang === 'RUS_DATA' && this.key_shift === true) {
-      this.nodeAREA.value += VKB_DATA.RUS_DATA.rus_shift[`${code}`];
+      this.nodeAREA.value = headPart + VKB_DATA.RUS_DATA.rus_shift[`${code}`] + tailPart;
     }
+    this.nodeAREA.selectionStart = startIndex + 1;
+    this.nodeAREA.selectionEnd = startIndex + 1;
     this.nodeAREA.focus();
   }
 
