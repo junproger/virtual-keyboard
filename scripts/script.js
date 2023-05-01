@@ -752,6 +752,8 @@ class VirtualKeyboard {
 
   addEventsListeners() {
     document.addEventListener('click', (event) => this.eventMouseClick(event));
+    document.addEventListener('keydown', (event) => this.eventKeysDown(event));
+    document.addEventListener('keyup', (event) => this.eventKeysUp(event));
   }
 
   // MOUSE EVENTS
@@ -826,6 +828,114 @@ class VirtualKeyboard {
         break;
     }
     this.nodeAREA.focus();
+  }
+
+  // KEYBOARD EVENTS
+  // KEYBOARD KEYS DOWN
+  eventKeysDown(event) {
+    // initial statement & prevent
+    if (KEYS_CODES.includes(event.code)) {
+      event.preventDefault();
+    } else {
+      return;
+    }
+    // keys highlight && !event.repeat
+    if (KEYS_CODES.includes(event.code) && !event.repeat) {
+      document.getElementById(`${event.code}`).classList.add('keyactive');
+    } else {
+      return;
+    }
+    // switch language && !event.repeat
+    if (((event.code === 'ShiftLeft') && event.ctrlKey) || (event.shiftKey && (event.code === 'ControlLeft'))) {
+      if (this.key_lang === 'ENG_DATA' && !event.repeat) {
+        this.key_lang = 'RUS_DATA';
+      } else {
+        this.key_lang = 'ENG_DATA';
+      }
+      localStorage.setItem('junpr#8574VkbLang', this.key_lang);
+      this.createKeysLayout();
+    }
+    // events caps down
+    if (event.code === 'CapsLock') {
+      if (this.key_caps === false) {
+        this.key_caps = true;
+        document.getElementById(`${event.code}`).classList.add('specactive');
+      } else {
+        this.key_caps = false;
+        document.getElementById(`${event.code}`).classList.remove('specactive');
+      }
+      this.createKeysLayout();
+    }
+    // events shifts down && !event.repeat
+    if ((!event.ctrlKey || event.code !== 'ControlLeft') && (event.code === 'ShiftLeft' || event.code === 'ShiftRight')) {
+      if (this.key_shift === false && !event.repeat) {
+        this.key_shift = true;
+        document.getElementById(`${event.code}`).classList.add('specactive');
+      } else {
+        this.key_shift = false;
+        document.getElementById(`${event.code}`).classList.remove('specactive');
+      }
+      this.createKeysLayout();
+    }
+    // special keys
+    switch (event.code) {
+      case 'Backspace':
+        this.editSelectedKeys('backsp');
+        break;
+      case 'Tab':
+        this.nodeAREA.value += '    ';
+        break;
+      case 'Delete':
+        this.editSelectedKeys('delete');
+        break;
+      case 'Enter':
+        this.nodeAREA.value += '\n';
+        break;
+      case 'Space':
+        this.nodeAREA.value += ' ';
+        break;
+      case 'CapsLock':
+      case 'ShiftLeft':
+      case 'ShiftRight':
+      case 'ControlLeft':
+      case 'MetaLeft':
+      case 'AltLeft':
+      case 'AltRight':
+      case 'ControlRight':
+        break;
+      default:
+        // any keys down && !event.repeat
+        if (KEYS_CODES.includes(event.code) && !event.repeat) {
+          this.printCurrentKey(event.code);
+        } else {
+          break;
+        }
+        break;
+    }
+  }
+
+  // KEYBOARD KEYS UP
+  eventKeysUp(event) {
+    // initial statement & prevent
+    if (KEYS_CODES.includes(event.code)) {
+      event.preventDefault();
+    } else {
+      return;
+    }
+    // keys highlight && !event.repeat
+    if (KEYS_CODES.includes(event.code) && !event.repeat) {
+      document.getElementById(`${event.code}`).classList.remove('keyactive');
+    } else {
+      return;
+    }
+    // events shifts up && !event.repeat
+    if ((!event.ctrlKey || event.code !== 'ControlLeft') && (event.code === 'ShiftLeft' || event.code === 'ShiftRight')) {
+      if (this.key_shift === true && !event.repeat) {
+        this.key_shift = false;
+        document.getElementById(`${event.code}`).classList.remove('specactive');
+      }
+      this.createKeysLayout();
+    }
   }
 }
 
